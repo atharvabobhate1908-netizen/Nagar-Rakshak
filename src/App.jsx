@@ -4,8 +4,6 @@ import LandingPage from "./pages/LandingPage";
 import ReportPage from "./pages/ReportPage";
 import MapPage from "./pages/MapPage";
 import ModeratorPage from "./ModeratorPage";
-
-// --- NEW LIVE DEMO ROUTES ---
 import NGOPortal from "./NGOPortal";
 import CitizenTrack from "./CitizenTrack";
 
@@ -18,8 +16,6 @@ function App() {
           <Route path="/report" element={<ReportPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/admin" element={<ModeratorPage />} />
-          
-          {/* MENTOR UPGRADE: NGO App & Citizen Tracker */}
           <Route path="/ngo" element={<NGOPortal />} />
           <Route path="/track" element={<CitizenTrack />} />
         </Route>
