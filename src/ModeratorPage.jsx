@@ -129,7 +129,7 @@ A completion alert and thank-you message has been pushed to the reporting device
     }
   };
 
-  // --- 🔥 NEW: MUNICIPAL AUDIT EXPORTER 🔥 ---
+  // --- MUNICIPAL AUDIT EXPORTER ---
   const exportToCSV = () => {
     const headers = "ID,CATEGORY,DESCRIPTION,STATUS,LATITUDE,LONGITUDE,WORKFLOW_STEP\n";
     const rows = resolvedReports.map(r => 
@@ -192,6 +192,24 @@ A completion alert and thank-you message has been pushed to the reporting device
 
       {dataLoading ? <div style={{ textAlign: 'center', color: '#94a3b8', padding: '40px' }}>Synchronizing intel...</div> : (
         <>
+          {/* --- NEW: EXECUTIVE ANALYTICS RIBBON --- */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px' }}>
+            <div style={{ backgroundColor: '#0f172a', padding: '20px', borderRadius: '12px', border: '1px solid #1e293b', borderBottom: '4px solid #38bdf8' }}>
+              <p style={{ color: '#94a3b8', fontSize: '12px', textTransform: 'uppercase', fontWeight: 'bold', margin: '0 0 5px 0' }}>Total Hazards Reported</p>
+              <h3 style={{ color: '#f8fafc', fontSize: '28px', margin: 0 }}>{pendingReports.length + activeReports.length + resolvedReports.length}</h3>
+            </div>
+            <div style={{ backgroundColor: '#0f172a', padding: '20px', borderRadius: '12px', border: '1px solid #1e293b', borderBottom: '4px solid #10b981' }}>
+              <p style={{ color: '#94a3b8', fontSize: '12px', textTransform: 'uppercase', fontWeight: 'bold', margin: '0 0 5px 0' }}>Successfully Resolved</p>
+              <h3 style={{ color: '#10b981', fontSize: '28px', margin: 0 }}>{resolvedReports.length}</h3>
+            </div>
+            <div style={{ backgroundColor: '#0f172a', padding: '20px', borderRadius: '12px', border: '1px solid #1e293b', borderBottom: '4px solid #ef4444' }}>
+              <p style={{ color: '#94a3b8', fontSize: '12px', textTransform: 'uppercase', fontWeight: 'bold', margin: '0 0 5px 0' }}>Resolution Rate</p>
+              <h3 style={{ color: '#ef4444', fontSize: '28px', margin: 0 }}>
+                {Math.round((resolvedReports.length / Math.max(1, (pendingReports.length + activeReports.length + resolvedReports.length))) * 100)}%
+              </h3>
+            </div>
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px' }}>
             
             <div style={{ backgroundColor: '#0f172a', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
@@ -203,7 +221,7 @@ A completion alert and thank-you message has been pushed to the reporting device
               {pendingReports.length === 0 ? <p style={{ color: '#475569', textAlign: 'center', padding: '20px' }}>Queue is currently clear.</p> : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                   {pendingReports.map(r => {
-                    // --- 🔥 NEW: THREAT MATRIX AUTO-FLAGGING 🔥 ---
+                    // --- THREAT MATRIX AUTO-FLAGGING ---
                     const desc = r.description.toLowerCase();
                     const isCritical = desc.includes('wire') || desc.includes('fire') || desc.includes('accident') || desc.includes('urgent');
 
@@ -257,7 +275,7 @@ A completion alert and thank-you message has been pushed to the reporting device
           <div style={{ marginTop: '30px', backgroundColor: '#0f172a', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #1e293b', paddingBottom: '15px' }}>
               
-              {/* --- CSV EXPORT BUTTON INTEGRATED HERE --- */}
+              {/* --- CSV EXPORT BUTTON --- */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                 <h2 style={{ fontSize: '18px', color: '#38bdf8', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>📁 Mission Archive & NGO Distribution</h2>
                 <button onClick={exportToCSV} style={{ backgroundColor: '#0284c7', color: 'white', padding: '6px 12px', border: 'none', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}>
