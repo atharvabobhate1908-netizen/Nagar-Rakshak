@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from './supabase';
 
 const ADMIN_EMAILS = [
-  'pantomime-managing44@bravealias.com' 
+  'admin@nagar-rakshak.in' 
 ];
 
 function SecureImage({ path }) {
