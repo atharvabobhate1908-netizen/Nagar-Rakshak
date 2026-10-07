@@ -4,7 +4,7 @@ import { supabase } from './supabase';
 // 🛑 SECURITY GATEKEEPER: Only this single email has Admin access.
 // If you want to use a different email, just change it inside the quotes.
 const ADMIN_EMAILS = [
-  'pantomime-managing44@bravealias.com' 
+  'admin@gmail.com' 
 ];
 
 function SecureImage({ path }) {
