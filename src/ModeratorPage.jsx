@@ -129,6 +129,21 @@ A completion alert and thank-you message has been pushed to the reporting device
     }
   };
 
+  // --- 🔥 NEW: MUNICIPAL AUDIT EXPORTER 🔥 ---
+  const exportToCSV = () => {
+    const headers = "ID,CATEGORY,DESCRIPTION,STATUS,LATITUDE,LONGITUDE,WORKFLOW_STEP\n";
+    const rows = resolvedReports.map(r => 
+      `${r.id},${r.category},"${r.description.replace(/"/g, '""')}",${r.status},${r.latitude},${r.longitude},${r.workflow_step || 0}`
+    ).join("\n");
+    
+    const blob = new Blob([headers + rows], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'NagarRakshak_Municipal_Audit.csv';
+    a.click();
+  };
+
   if (authLoading) return <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>Initializing Secure Portal...</div>;
 
   if (!user) {
@@ -187,12 +202,20 @@ A completion alert and thank-you message has been pushed to the reporting device
               
               {pendingReports.length === 0 ? <p style={{ color: '#475569', textAlign: 'center', padding: '20px' }}>Queue is currently clear.</p> : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                  {pendingReports.map(r => (
-                    <div key={r.id} style={{ backgroundColor: '#1e293b', padding: '15px', borderRadius: '8px', display: 'flex', gap: '15px', borderLeft: '4px solid #fbbf24' }}>
+                  {pendingReports.map(r => {
+                    // --- 🔥 NEW: THREAT MATRIX AUTO-FLAGGING 🔥 ---
+                    const desc = r.description.toLowerCase();
+                    const isCritical = desc.includes('wire') || desc.includes('fire') || desc.includes('accident') || desc.includes('urgent');
+
+                    return (
+                    <div key={r.id} style={{ backgroundColor: '#1e293b', padding: '15px', borderRadius: '8px', display: 'flex', gap: '15px', borderLeft: isCritical ? '4px solid #ef4444' : '4px solid #fbbf24' }}>
                       <SecureImage path={r.image_path} />
                       <div style={{ flex: 1 }}>
-                        <span style={{ color: '#fbbf24', fontSize: '12px', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>{r.category.replace('_', ' ')}</span>
-                        <p style={{ margin: '8px 0', fontSize: '15px', lineHeight: '1.4' }}>{r.description}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                          <span style={{ color: '#fbbf24', fontSize: '12px', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>{r.category.replace('_', ' ')}</span>
+                          {isCritical && <span style={{ backgroundColor: '#7f1d1d', color: '#fca5a5', fontSize: '10px', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px', border: '1px solid #ef4444' }}>🚨 CRITICAL</span>}
+                        </div>
+                        <p style={{ margin: '4px 0 8px 0', fontSize: '15px', lineHeight: '1.4' }}>{r.description}</p>
                         <p style={{ margin: 0, fontSize: '11px', color: '#64748b' }}>ID: {r.id.split('-')[0]} • GPS: {r.latitude}, {r.longitude}</p>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'center' }}>
@@ -200,7 +223,7 @@ A completion alert and thank-you message has been pushed to the reporting device
                         <button onClick={() => updateStatus(r.id, 'rejected')} style={{ padding: '8px 16px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}>Dismiss</button>
                       </div>
                     </div>
-                  ))}
+                  )})}
                 </div>
               )}
             </div>
@@ -233,7 +256,15 @@ A completion alert and thank-you message has been pushed to the reporting device
 
           <div style={{ marginTop: '30px', backgroundColor: '#0f172a', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #1e293b', paddingBottom: '15px' }}>
-              <h2 style={{ fontSize: '18px', color: '#38bdf8', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>📁 Mission Archive & NGO Distribution</h2>
+              
+              {/* --- CSV EXPORT BUTTON INTEGRATED HERE --- */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <h2 style={{ fontSize: '18px', color: '#38bdf8', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>📁 Mission Archive & NGO Distribution</h2>
+                <button onClick={exportToCSV} style={{ backgroundColor: '#0284c7', color: 'white', padding: '6px 12px', border: 'none', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}>
+                  📥 Export CSV Audit
+                </button>
+              </div>
+
               <span style={{ backgroundColor: '#0c4a6e', color: '#38bdf8', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>{resolvedReports.length} resolved</span>
             </div>
 
