@@ -5,19 +5,23 @@ import ReportPage from "./pages/ReportPage";
 import MapPage from "./pages/MapPage";
 import ModeratorPage from "./ModeratorPage";
 
+// --- NEW LIVE DEMO ROUTES ---
+import NGOPortal from "./NGOPortal";
+import CitizenTrack from "./CitizenTrack";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          {/* Landing page is now the default home screen */}
           <Route path="/" element={<LandingPage />} />
-          
-          {/* Report page moved to its own route */}
           <Route path="/report" element={<ReportPage />} />
-          
           <Route path="/map" element={<MapPage />} />
           <Route path="/admin" element={<ModeratorPage />} />
+          
+          {/* MENTOR UPGRADE: NGO App & Citizen Tracker */}
+          <Route path="/ngo" element={<NGOPortal />} />
+          <Route path="/track" element={<CitizenTrack />} />
         </Route>
       </Routes>
     </BrowserRouter>
